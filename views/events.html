@@ -33,16 +33,16 @@
         <div class="col-lg-12">
             <div class="m-0 row p-3">
             <div class="col-md-3 col-lg-2 p-0">
-            <strong class="pl-lg-2"> ID</strong>
+                <strong class="pl-lg-2">Title</strong>
             </div>
             <div class="col-sm-12 col-lg-3 p-0 pl-lg-5">
-            <strong> Name</strong>
+                <strong>Description</strong>
             </div>
             <div class="col-sm-12 col-lg-3 p-0 pl-lg-5">
-                <strong>Email</strong>
+                <strong>Admin</strong>
             </div>
             <div class="col-sm-12 col-lg-3 p-0 pl-lg-5">
-                <strong>Contact</strong>
+                <strong>Time</strong>
             </div>
             <div class="col-sm-12 col-lg-1 p-0">
                 <strong>Action</strong>
@@ -115,24 +115,6 @@
 
       var socket = io();
 
-      $('#login-form').on('submit', (e) => {
-        e.preventDefault();
-        
-        const email = $('#email').val();
-        const password = $('#password').val();
-
-        if ( email.trim() === '' ) {
-          $('#email').addClass('error-style');
-          $('#email').focus();
-        }else if ( password.trim() === '' ) {
-          $('#password').addClass('error-style');
-          $('#password').focus();
-        }
-
-        socket.emit('user.login', {email: email, password: password});
-
-      });
-
       socket.emit('events.get.list');
 
       socket.on('events.list', (events) => {
@@ -171,11 +153,6 @@
 </div>
             `;
         });
-      });
-
-      socket.on('user.login.success', (user) => {
-        setCookie('ev_auth', user, { expires: 60* 60 * 60 * 24* 7 });
-        window.location.href = '/events/all';
       });
     </script>
 </html>
