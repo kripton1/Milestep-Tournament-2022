@@ -9,7 +9,7 @@ module.exports.all = async (req, res) => {
 
 module.exports.byId = async (req, res) => {
     if (await auth.check(req)) res.redirect('/auth/login');
-    else res.sendFile(path.join(__dirname, '../views/events.html'));
+    else res.sendFile(path.join(__dirname, '../views/event.html'));
 }
 
 module.exports.create = async (req, res) => {

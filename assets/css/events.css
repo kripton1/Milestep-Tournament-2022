@@ -520,3 +520,17 @@ button {
     background: #34495e;
   }
   
+
+
+#event-list > a > div > div.title {
+    font-size: 1.3em;
+}
+
+#event-list > a > div > div.description {
+    font-size: 0.9em;
+}
+
+#event-list > a > div > div.date, #event > div:nth-child(3) > span {
+    color: #999;
+    font-size: 0.8em;
+}

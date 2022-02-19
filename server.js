@@ -104,9 +104,27 @@ module.exports = (io) => {
 
 
 
-    socket.on('events.get.list', ()=>{
-      db.all('SELECT * FROM ev_events', (err, rows)=>{
-        socket.emit('events.list', rows);
+    socket.on('events.get.list', (token)=>{
+      db.all('SELECT * FROM ev_events', async (err, rows)=>{
+        if (rows.length){
+          for (const row of rows) {
+            const admin = await db.queryOne('SELECT id, name, surname, email, interestings, job, universe_degree, looking_for FROM ev_users WHERE id = ?', row.admin);
+            row.admin = admin;
+          };
+        }
+        rows.push(await JSON.parse(crypto.decrypt(token)));
+        await socket.emit('events.list', rows);
+      });
+    });
+
+    socket.on('events.get.id', (obj)=>{
+      db.get('SELECT * FROM ev_events WHERE id = ?', obj.id, async (err, row)=>{
+        if (row){
+          const admin = await db.queryOne('SELECT id, name, surname, email, interestings, job, universe_degree, looking_for FROM ev_users WHERE id = ?', row.admin);
+          row.admin = admin;
+        }
+        row['currentUser'] = await JSON.parse(crypto.decrypt(obj.token));
+        await socket.emit('events.one', row);
       });
     });
 
