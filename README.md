@@ -8,3 +8,9 @@ Made using next main packages:
 
 # Login page:
 ![Login page](https://i.imgur.com/gjRzQf3.png)
+# Events page:
+![Events page](https://i.imgur.com/Z4AthlG.png)
+# Event page
+![Event page](https://i.imgur.com/KfcYMds.png)
+# Create event page:
+![Create event page](https://i.imgur.com/YrO5Pmn.png)
