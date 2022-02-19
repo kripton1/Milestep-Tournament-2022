@@ -12,7 +12,6 @@ const path = require("path");
 const port = process.env.PORT || 5000;
 const db = require('./db');
 
-// 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 - personal token github
 
 // initialisation middleware components
 app.use(compression());
