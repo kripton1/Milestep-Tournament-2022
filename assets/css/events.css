@@ -530,7 +530,7 @@ button {
     font-size: 0.9em;
 }
 
-#event-list > a > div > div.date, #event > div:nth-child(3) > span {
+#event-list > a > div > div.date, #event > div > span {
     color: #999;
     font-size: 0.8em;
 }

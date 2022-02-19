@@ -30,6 +30,8 @@
     </nav>
     <div class="container my-3">
         <div class="row" id="event">
+            <div class="alert alert-danger d-flex align-items-center" id="error-box" role="alert" style="display:none!important">
+            </div>
             <h3></h3>
             <div class="description">
             </div>
@@ -76,16 +78,39 @@
       socket.emit('events.get.id', {id: window.location.pathname.split('/')[window.location.pathname.split('/').length - 1], token: getCookie('ev_auth')});
 
       socket.on('events.one', (event) => {
-            if (!event.id) {
+            if (!event || !event.id) {
                 $('#event').html('<p class="text-center">Event not found</p>');
             }
             
             $('#event > h3').text(event.title);
             $('#event > div.description').text(event.description);
-            $('#event > div:nth-child(3) > span').text(event.admin.name + ' ' + event.admin.surname +  ' • ' + timeConverter(event.date));
-            
+            $('#event > div > span').text(event.admin.name + ' ' + event.admin.surname +  ' • ' + timeConverter(event.date));
+
+            if (event.subscribers && JSON.parse(event.subscribers).includes(event.currentUser.id)){
+              $('body > nav > div > form > a.btn.btn-outline-success.mx-1').text('Unsubscribe from event');
+              $('body > nav > div > form > a.btn.btn-outline-success.mx-1').removeClass('btn-outline-success').addClass('btn-outline-warning');
+
+              $('body > nav > div > form > a.btn.mx-1.btn-outline-warning').on('click', (e) => {
+                e.preventDefault();
+                confirm('Are you sure want to unsubscribe from this event?') ? socket.emit('events.exit', {id: window.location.pathname.split('/')[window.location.pathname.split('/').length - 1], token: getCookie('ev_auth')}) : false;
+              });
+            }else{
+              $('body > nav > div > form > a.btn.btn-outline-success.mx-1').on('click', (e) => {
+                e.preventDefault();
+                socket.emit('events.join', {id: window.location.pathname.split('/')[window.location.pathname.split('/').length - 1], token: getCookie('ev_auth')});
+              });
+            }
       });
 
-    $('body > nav > div > form > a.btn.btn-outline-success.mx-1').on('click');
+    
+
+    socket.on('events.join.error', (msg) => {
+        $('#error-box').show();
+        $('#error-box').text(msg);
+    });
+
+    socket.on('events.join.success', () => {window.location.reload();});
+
+    socket.on('events.exit.success', () => { window.location.reload(); });
     </script>
 </html>

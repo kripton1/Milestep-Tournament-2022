@@ -23,6 +23,7 @@
         <div class="container-fluid">
           <a class="navbar-brand">Milestep 2022</a>
           <form class="d-flex">
+            <a class="btn btn-outline-success" href="/auth/logout" id="logout">Logout</a>
             <a class="btn btn-outline-success" href="/events/create">Create event</a>
           </form>
         </div>
@@ -94,12 +95,36 @@
         return matches ? decodeURIComponent(matches[1]) : undefined;
       }
 
+      function setCookie(name, value, options = {}) {
+
+        options = {
+        path: '/',
+        ...options
+        };
+
+        if (options.expires instanceof Date) {
+        options.expires = options.expires.toUTCString();
+        }
+
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+        for (let optionKey in options) {
+        updatedCookie += "; " + optionKey;
+        let optionValue = options[optionKey];
+        if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+        }
+        }
+
+        document.cookie = updatedCookie;
+      }
+
       var socket = io();
 
       socket.emit('events.get.list', getCookie('ev_auth'));
 
       socket.on('events.list', (events) => {
-            if (events.length == 0) {
+            if (events.length-1 <= 0) {
                 $('#event-list').html('<p class="text-center">Events is empty. Be first and create one!</p>');
             }
             
@@ -107,9 +132,12 @@
             const event = events[i];
             let a = document.createElement('a');
             a.className = 'col-sm-4 col-lg-12 mt-2 mb-2';
-            a.href = '/events/'+event.id;
+            let buttons = '';
+            if (event.admin.id+'' === events[events.length - 1].id+''){
+                buttons = `<button class="btn btn-sm btn-danger d-inline-block" id="delete"><i class="fas fa-trash-alt"></i></i></button>`;
+            }
             a.innerHTML = `
-<div class="m-0 row row-container bg-white p-3">
+<div class="m-0 row row-container bg-white p-3" id="${event.id}">
     <div class="col-md-3 col-lg-2 p-0 pl-lg-2 title">
         ${event.title}
     </div>
@@ -123,21 +151,31 @@
         ${timeConverter(event.date)}
     </div>
     <div class="col-sm-12 col-lg-1 p-0 action">
-        `;
-        
-        if (event.admin.id+'' === events[events.length - 1].id+''){
-            a.innerHTML += `<button class="btn btn-sm btn-success d-inline-block mr-1"><i class="fas fa-edit"></i></button>
-        <button class="btn btn-sm btn-danger d-inline-block"><i class="fas fa-trash-alt"></i></i></button>`;
-        }
-
-        a.innerHTML += `
+        <a href="/events/${event.id}" class="btn btn-sm btn-info text-white d-inline-block"><i class="fas fa-eye"></i></i></a>
+        ${buttons}
     </div>
-</div>
-            `;
+</div>`;
 
             $('#event-list').append(a);
             
         };
+
+
+        $('#delete').on('click', (e) => {
+            e.preventDefault();
+            confirm('Are you sure want to delete this event?') ? socket.emit('events.remove', e.currentTarget.parentNode.parentNode.id) : false;
+        });
       });
+
+      
+      $('#logout').on('click', (e)=>{
+          e.preventDefault();
+          setCookie('ev_auth', "", {
+              'max-age': -1
+          });
+          window.location.reload();
+      });
+
+      socket.on('events.remove.success', () => { window.location.reload(); });
     </script>
 </html>
