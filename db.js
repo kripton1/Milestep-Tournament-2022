@@ -31,3 +31,5 @@ db.exec(
     if (err) console.error(" --- Error creating tables: ", err);
   }
 );
+
+module.exports = db;

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register new account</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+    </style>
+    <link href="/assets/css/auth.css" rel="stylesheet" />
+    <script src="/assets/js/auth.js"></script>
+  </head>
+  <body>
+    <section id="login">
+        <div class="container">
+          <div class="row">
+              <div class="col-xs-12">
+                  <div class="form-wrap">
+                    <h1>Create new account</h1>
+                        <form role="form" action="javascript:;" method="post" id="login-form" autocomplete="off">
+                            <div class="form-group">
+                              <label for="name" class="sr-only">Name</label>
+                              <input type="text" name="name" id="name" class="form-control" placeholder="Alex">
+                            </div>
+                            <div class="form-group">
+                              <label for="surname" class="sr-only">Surname</label>
+                              <input type="text" name="surname" id="surname" class="form-control" placeholder="Dre">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="sr-only">Email</label>
+                                <input type="email" name="email" id="email" class="form-control" placeholder="somebody@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="key" class="sr-only">Password</label>
+                                <input type="password" name="key" id="key" class="form-control" placeholder="Password">
+                            </div>
+                            <input type="submit" id="btn-login" class="btn btn-custom btn-lg btn-block" value="Sign up">
+                        </form>
+                        <a href="/auth/login" class="forget" >Already have an account?</a>
+                        <hr>
+                  </div>
+            </div> <!-- /.col-xs-12 -->
+          </div> <!-- /.row -->
+        </div> <!-- /.container -->
+    </section>
+
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>Made by <strong><a href="//github.com/kripton1" target="_blank">Kripton1</a></strong></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+  //   var socket = io();
+
+  //   var messages = document.getElementById('messages');
+  // var form = document.getElementById('form');
+  // var input = document.getElementById('input');
+
+  // form.addEventListener('submit', function(e) {
+  //   e.preventDefault();
+  //   if (input.value) {
+  //     socket.emit('chat message', input.value);
+  //     input.value = '';
+  //   }
+  // });
+
+  // socket.on('chat message', function(msg) {
+  //   var item = document.createElement('li');
+  //   item.textContent = msg;
+  //   messages.appendChild(item);
+  //   window.scrollTo(0, document.body.scrollHeight);
+  // });
+    </script>
+</html>

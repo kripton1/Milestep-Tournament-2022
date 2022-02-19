@@ -18,6 +18,7 @@ app.use(compression());
 app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ limit: "15mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/assets', express.static('./assets'))
 app.use(bodyParser.json());
 app.use(require("cors")());
 morgan("combined", {
