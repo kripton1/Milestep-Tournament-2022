@@ -8,22 +8,23 @@ const encrypt = (text) => {
   const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
 
   const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
-
-  return {
-    iv: iv.toString("hex"),
-    content: encrypted.toString("hex"),
-  };
+  const ivr = iv.toString("hex");
+  const content = encrypted.toString("hex");
+  return ivr+'/'+content;
 };
 
 const decrypt = (hash) => {
+  const ivr = hash.split('/')[0];
+  const content = hash.split('/')[1];
+
   const decipher = crypto.createDecipheriv(
     algorithm,
     secretKey,
-    Buffer.from(hash.iv, "hex")
+    Buffer.from(ivr, "hex")
   );
 
   const decrpyted = Buffer.concat([
-    decipher.update(Buffer.from(hash.content, "hex")),
+    decipher.update(Buffer.from(content, "hex")),
     decipher.final(),
   ]);
 

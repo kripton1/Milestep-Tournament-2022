@@ -77,9 +77,13 @@
 
       });
 
-      socket.on('user.login.error', function(msg) {
+      socket.on('user.login.error', (msg) => {
         $('#error-box').show();
         $('#error-box').text(msg);
+      });
+
+      socket.on('user.login.success', (user) => {
+        
       });
     </script>
 </html>

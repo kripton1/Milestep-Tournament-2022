@@ -6,7 +6,7 @@ db.exec(
     CREATE TABLE IF NOT EXISTS ev_users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name VARCHAR(100),
-        surame VARCHAR(100),
+        surname VARCHAR(100),
         email VARCHAR(100),
         password VARCHAR(100),
         interestings LONGTEXT,

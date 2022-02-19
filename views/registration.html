@@ -24,7 +24,7 @@
               <div class="col-xs-12">
                   <div class="form-wrap">
                     <h1>Create new account</h1>
-                        <form role="form" action="javascript:;" method="post" id="login-form" autocomplete="off">
+                        <form role="form" action="javascript:;" method="post" id="reg-form" autocomplete="off">
                             <div class="form-group">
                               <label for="name" class="sr-only">Name</label>
                               <input type="text" name="name" id="name" class="form-control" placeholder="Alex">
@@ -38,8 +38,10 @@
                                 <input type="email" name="email" id="email" class="form-control" placeholder="somebody@example.com">
                             </div>
                             <div class="form-group">
-                                <label for="key" class="sr-only">Password</label>
-                                <input type="password" name="key" id="key" class="form-control" placeholder="Password">
+                                <label for="password" class="sr-only">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                            </div>
+                            <div class="alert alert-danger d-flex align-items-center" id="error-box" role="alert" style="display:none!important">
                             </div>
                             <input type="submit" id="btn-login" class="btn btn-custom btn-lg btn-block" value="Sign up">
                         </form>
@@ -63,25 +65,41 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-  //   var socket = io();
+      var socket = io();
 
-  //   var messages = document.getElementById('messages');
-  // var form = document.getElementById('form');
-  // var input = document.getElementById('input');
+      $('#reg-form').on('submit', (e) => {
+        e.preventDefault();
+        
+        const name = $('#name').val();
+        const surname = $('#surname').val();
+        const email = $('#email').val();
+        const password = $('#password').val();
 
-  // form.addEventListener('submit', function(e) {
-  //   e.preventDefault();
-  //   if (input.value) {
-  //     socket.emit('chat message', input.value);
-  //     input.value = '';
-  //   }
-  // });
+        if ( name.trim() === '' ) {
+          $('#name').addClass('error-style');
+          $('#name').focus();
+        }else if ( surname.trim() === '' ) {
+          $('#surname').addClass('error-style');
+          $('#surname').focus();
+        }else if ( email.trim() === '' ) {
+          $('#email').addClass('error-style');
+          $('#email').focus();
+        }else if ( password.trim() === '' ) {
+          $('#password').addClass('error-style');
+          $('#password').focus();
+        }
 
-  // socket.on('chat message', function(msg) {
-  //   var item = document.createElement('li');
-  //   item.textContent = msg;
-  //   messages.appendChild(item);
-  //   window.scrollTo(0, document.body.scrollHeight);
-  // });
+        socket.emit('user.registration', {name: name, surname: surname, email: email, password: password});
+
+      });
+
+      socket.on('user.registration.error', (msg) => {
+        $('#error-box').show();
+        $('#error-box').text(msg);
+      });
+
+      socket.on('user.registration.success', (user) => {
+        
+      });
     </script>
 </html>
