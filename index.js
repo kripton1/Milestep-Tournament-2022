@@ -10,6 +10,9 @@ const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
 const port = process.env.PORT || 5000;
+const db = require('./db');
+
+// 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 - personal token github
 
 // initialisation middleware components
 app.use(compression());
@@ -36,6 +39,7 @@ app.use(
 
 // routes
 app.use("/auth", require("./routes/auth"));
+app.use("/events", require("./routes/events"));
 
 // including IO response
 require('./server')(io);
