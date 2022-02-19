@@ -25,14 +25,16 @@ module.exports = (io) => {
         (err, row) => {
           if (err) throw err;
           if (!row) io.emit("user.login.error", "Invalid email or password");
-          else io.emit("user.login.success", row);
+          else {
+            delete row.password;
+            delete row.date_reg;
+            delete row.date_lastlogin;
+
+            io.emit("user.login.success", crypto.encrypt(JSON.stringify(row)));
+          }
         }
       );
     });
-
-
-
-
 
     socket.on("user.registration", (obj) => {
       if (!obj.name || obj.name.trim() + "" === "") {
@@ -80,8 +82,16 @@ module.exports = (io) => {
                     crypto.encrypt(obj.password),
                     (err, row) => {
                       if (err) throw err;
-                      if (row) io.emit("user.registration.success", row);
-                      else console.error("--- Regstration user error");
+                      if (row) {
+                        delete row.password;
+                        delete row.date_reg;
+                        delete row.date_lastlogin;
+
+                        io.emit(
+                          "user.registration.success",
+                          crypto.encrypt(JSON.stringify(row))
+                        );
+                      } else console.error("--- Regstration user error");
                     }
                   );
                 }

@@ -57,6 +57,31 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      function setCookie(name, value, options = {}) {
+
+        options = {
+          path: '/',
+          ...options
+        };
+
+        if (options.expires instanceof Date) {
+          options.expires = options.expires.toUTCString();
+        }
+
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+        for (let optionKey in options) {
+          updatedCookie += "; " + optionKey;
+          let optionValue = options[optionKey];
+          if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+          }
+        }
+
+        document.cookie = updatedCookie;
+      }
+
+
       var socket = io();
 
       $('#login-form').on('submit', (e) => {
@@ -83,7 +108,8 @@
       });
 
       socket.on('user.login.success', (user) => {
-        
+        setCookie('ev_auth', user, { expires: 60* 60 * 60 * 24* 7 });
+        window.location.href = '/events/all';
       });
     </script>
 </html>
