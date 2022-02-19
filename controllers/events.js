@@ -1,17 +1,28 @@
 const path = require('path');
+const auth = require('../auth.js');
+const server = require('../server');
 
-module.exports.all = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/auth.html'));
+module.exports.all = async (req, res) => {
+    if (await auth.check(req)) res.redirect('/auth/login');
+    else res.sendFile(path.join(__dirname, '../views/events.html'));
 }
 
-module.exports.create = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/auth.html'));
+module.exports.byId = async (req, res) => {
+    if (await auth.check(req)) res.redirect('/auth/login');
+    else res.sendFile(path.join(__dirname, '../views/events.html'));
 }
 
-module.exports.join = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/auth.html'));
+module.exports.create = async (req, res) => {
+    if (await auth.check(req)) res.redirect('/auth/login');
+    else res.sendFile(path.join(__dirname, '../views/events.html'));
 }
 
-module.exports.delete = (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/auth.html'));
+module.exports.join = async (req, res) => {
+    if (await auth.check(req)) res.redirect('/auth/login');
+    else res.sendFile(path.join(__dirname, '../views/events.html'));
+}
+
+module.exports.delete = async (req, res) => {
+    if (await auth.check(req)) res.redirect('/auth/login');
+    else res.sendFile(path.join(__dirname, '../views/events.html'));
 }

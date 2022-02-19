@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>List of all events</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding-bottom: 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+    </style>
+    <link href="/assets/css/main.css" rel="stylesheet" />
+    <link href="/assets/css/events.css" rel="stylesheet" />
+    <script src="/assets/js/events.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand">Milestep 2022</a>
+          <form class="d-flex">
+            <a class="btn btn-outline-success" href="/events/create">Create event</a>
+          </form>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row le-hide">
+            
+        <div class="col-lg-12">
+            <div class="m-0 row p-3">
+            <div class="col-md-3 col-lg-2 p-0">
+            <strong class="pl-lg-2"> ID</strong>
+            </div>
+            <div class="col-sm-12 col-lg-3 p-0 pl-lg-5">
+            <strong> Name</strong>
+            </div>
+            <div class="col-sm-12 col-lg-3 p-0 pl-lg-5">
+                <strong>Email</strong>
+            </div>
+            <div class="col-sm-12 col-lg-3 p-0 pl-lg-5">
+                <strong>Contact</strong>
+            </div>
+            <div class="col-sm-12 col-lg-1 p-0">
+                <strong>Action</strong>
+            </div>
+            </div>
+        </div>
+        
+        
+        </div>
+        <div class="row" id="event-list">
+
+            <a class="col-sm-4 col-lg-12 mt-2 mb-2">
+                <div class="m-0 row row-container bg-white p-3">
+                <div class="col-md-3 col-lg-2 p-0 pl-lg-2">
+                    14310699
+                </div>
+                <div class="col-sm-12 col-lg-3  p-0 p-0 pl-lg-5">
+                    Lorem Ipsum Longname
+                </div>
+                <div class="col-sm-12 col-lg-3 p-0 p-0 pl-lg-5">
+                    usermaster@gmail.com
+                </div>
+                <div class="col-sm-12 col-lg-3 p-0 p-0 pl-lg-5">
+                    09186886862
+                </div>
+                <div class="col-sm-12 col-lg-1 p-0">
+        
+                        
+                    <button class="btn btn-sm btn-success d-inline-block mr-1"><i class="fas fa-edit"></i>                </button>
+                    <button class="btn btn-sm btn-danger d-inline-block"><i class="fas fa-trash-alt"></i></i>               </button>
+                        
+        
+                </div>
+                </div>
+            </a>
+        
+        </div>
+    
+    
+    
+        
+        </div>
+    </div>
+
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <p>Made by <strong><a href="//github.com/kripton1" target="_blank">Kripton1</a></strong></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      function timeConverter(UNIX_timestamp){
+        var a = new Date(UNIX_timestamp * 1000);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+        return time;
+      }
+
+
+      var socket = io();
+
+      $('#login-form').on('submit', (e) => {
+        e.preventDefault();
+        
+        const email = $('#email').val();
+        const password = $('#password').val();
+
+        if ( email.trim() === '' ) {
+          $('#email').addClass('error-style');
+          $('#email').focus();
+        }else if ( password.trim() === '' ) {
+          $('#password').addClass('error-style');
+          $('#password').focus();
+        }
+
+        socket.emit('user.login', {email: email, password: password});
+
+      });
+
+      socket.emit('events.get.list');
+
+      socket.on('events.list', (events) => {
+            if (events.length == 0) {
+                $('#event-list').html('<p class="text-center">Events is empty. Be first and create one!</p>');
+            }
+            console.log(events);
+        events.forEach( (event) => {
+            let a = document.createElement('a');
+            a.class = 'col-sm-4 col-lg-12 mt-2 mb-2';
+            a.href = '/events/'+event.id;
+            a.innerHTML = `
+<div class="m-0 row row-container bg-white p-3">
+    <div class="col-md-3 col-lg-2 p-0 pl-lg-2">
+        ${event.name}
+    </div>
+    <div class="col-sm-12 col-lg-3  p-0 p-0 pl-lg-5">
+        ${event.description}
+    </div>
+    <div class="col-sm-12 col-lg-3 p-0 p-0 pl-lg-5">
+        ${event.admin.name} ${event.admin.surname}
+    </div>
+    <div class="col-sm-12 col-lg-3 p-0 p-0 pl-lg-5">
+        ${timeConverter(event.date)}
+    </div>
+    <div class="col-sm-12 col-lg-1 p-0">
+        `;
+        
+        if (event.admin.id+'' === event.currentUser.id+''){
+            a.innerHTML += `<button class="btn btn-sm btn-success d-inline-block mr-1"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-sm btn-danger d-inline-block"><i class="fas fa-trash-alt"></i></i></button>`;
+        }
+
+        a.innerHTML += `
+    </div>
+</div>
+            `;
+        });
+      });
+
+      socket.on('user.login.success', (user) => {
+        setCookie('ev_auth', user, { expires: 60* 60 * 60 * 24* 7 });
+        window.location.href = '/events/all';
+      });
+    </script>
+</html>

@@ -101,5 +101,33 @@ module.exports = (io) => {
         }
       );
     });
+
+
+
+    socket.on('events.get.list', ()=>{
+      db.all('SELECT * FROM ev_events', (err, rows)=>{
+        socket.emit('events.list', rows);
+      });
+    });
+
+    socket.on('events.create', (obj)=>{
+      if (!obj.name || obj.name.trim() + "" === "") {
+        io.emit("user.registration.error", "Name should be filled");
+        return;
+      }
+      if (!obj.description || obj.description.trim() + "" === "") {
+        io.emit("user.registration.error", "Description should be filled");
+        return;
+      }
+      if (!obj.date || obj.date.trim() + "" === "") {
+        io.emit("user.registration.error", "Date should be filled");
+        return;
+      }
+
+
+      
+
+    });
+
   });
 };

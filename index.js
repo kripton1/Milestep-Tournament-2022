@@ -11,10 +11,12 @@ const fs = require("fs");
 const path = require("path");
 const port = process.env.PORT || 5000;
 const db = require('./db');
+const cookieParser = require('cookie-parser');
 
 
 // initialisation middleware components
 app.use(compression());
+app.use(cookieParser());
 app.use(express.json({ limit: "15mb" }));
 app.use(express.urlencoded({ limit: "15mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));

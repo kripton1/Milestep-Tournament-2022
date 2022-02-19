@@ -20,6 +20,7 @@ db.exec(
     CREATE TABLE IF NOT EXISTS ev_events (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name VARCHAR(100),
+        description MEDIUMTEXT,
         admin INTEGER,
         subscribers LONGTEXT,
         date MEDIUMINT
@@ -31,5 +32,29 @@ db.exec(
     if (err) console.error(" --- Error creating tables: ", err);
   }
 );
+
+// Hack to look like node-postgres
+// (and handle async / await operation)
+db.query = function (sql, params) {
+  var that = this;
+  return new Promise(function (resolve, reject) {
+    that.all(sql, params, function (error, rows) {
+      if (error) reject(error);
+      else resolve(rows);
+    });
+  });
+};
+
+db.queryOne = function (sql, params) {
+    var that = this;
+    return new Promise(function (resolve, reject) {
+      that.get(sql, params, function (error, row) {
+        if (error)
+          reject(error);
+        else
+          resolve(row);
+      });
+    });
+  };
 
 module.exports = db;
