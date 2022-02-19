@@ -13,7 +13,6 @@ const port = process.env.PORT || 5000;
 const db = require('./db');
 const cookieParser = require('cookie-parser');
 
-
 // initialisation middleware components
 app.use(compression());
 app.use(cookieParser());

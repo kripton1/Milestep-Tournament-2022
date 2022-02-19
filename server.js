@@ -111,21 +111,29 @@ module.exports = (io) => {
     });
 
     socket.on('events.create', (obj)=>{
-      if (!obj.name || obj.name.trim() + "" === "") {
-        io.emit("user.registration.error", "Name should be filled");
+      if (!obj.title || obj.title.trim() + "" === "") {
+        io.emit("events.create.error", "Title should be filled");
         return;
       }
       if (!obj.description || obj.description.trim() + "" === "") {
-        io.emit("user.registration.error", "Description should be filled");
+        io.emit("events.create.error", "Description should be filled");
         return;
       }
-      if (!obj.date || obj.date.trim() + "" === "") {
-        io.emit("user.registration.error", "Date should be filled");
+      if (!obj.datetime || !parseInt(obj.datetime) ) {
+        io.emit("events.create.error", "Date-time should be filled");
         return;
       }
 
+      db.run('INSERT INTO ev_events (title, description, admin, date) VALUES (?, ?, ?, ?)',
+      obj.title,
+      obj.description,
+      JSON.parse(crypto.decrypt(obj.token)).id,
+      obj.datetime,
+      (err)=>{
+        if (err) throw err;
+        else io.emit("events.create.success");
+      });
 
-      
 
     });
 

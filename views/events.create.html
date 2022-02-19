@@ -42,8 +42,8 @@
                     <h1>Create event</h1>
                         <form role="form" action="javascript:;" method="post" id="event-form" autocomplete="off">
                             <div class="form-group">
-                                <label for="name" class="sr-only">Title</label>
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Name of event">
+                                <label for="title" class="sr-only">Title</label>
+                                <input type="text" name="title" id="title" class="form-control" placeholder="Name of event">
                             </div>
                             <div class="form-group">
                                 <label for="description" class="sr-only">Description</label>
@@ -90,6 +90,12 @@
         return time;
       }
 
+      function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
 
       var socket = io();
 
@@ -111,12 +117,16 @@
           $('#datetimepicker8').focus();
         }
 
-        socket.emit('user.login', {title: title, description: description, datetime: Date.parse(datetime) / 1000});
+        socket.emit('events.create', {title: title, description: description, datetime: Date.parse(datetime) / 1000, token: getCookie('ev_auth')});
 
       });
 
-    socket.on('user.login.success', (user) => {
-        setCookie('ev_auth', user, { expires: 60* 60 * 60 * 24* 7 });
+      socket.on('events.create.error', (msg) => {
+        $('#error-box').show();
+        $('#error-box').text(msg);
+      });
+
+      socket.on('events.create.success', (user) => {
         window.location.href = '/events/all';
       });
     </script>

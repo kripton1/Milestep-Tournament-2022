@@ -29,5 +29,5 @@ module.exports.check = async (req, type = "no_auth") => {
 
 module.exports.getCurrentUser = async (req) => {
   if (await this.check(req)) return false;
-  
+  return JSON.parse(crypto.decrypt(req.cookies.ev_auth));
 };

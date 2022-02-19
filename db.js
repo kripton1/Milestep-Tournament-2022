@@ -19,7 +19,7 @@ db.exec(
     
     CREATE TABLE IF NOT EXISTS ev_events (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name VARCHAR(100),
+        title VARCHAR(100),
         description MEDIUMTEXT,
         admin INTEGER,
         subscribers LONGTEXT,
